@@ -1,0 +1,2 @@
+serviceClass: com.fawn.urbanIrrigationTool.client.GreetingService
+path: 4D07DA35762E60F773F75D9A72E9886F.gwt.rpc

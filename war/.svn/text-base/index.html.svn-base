@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Urban Irrigation Tool</title>
+<link rel="stylesheet" type="text/css" href="style/style.css"></link>
+<link rel="shortcut icon" href="http://fawn.ifas.ufl.edu/img/favicon.ico" />
+<!--<script src="js/jquery-validate/lib/jquery.js" type="text/javascript"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js" type="text/javascript"></script>
+<script src="js/jquery-validate/jquery.validate.js"
+	type="text/javascript"></script>
+<script src="js/jquery.qtip-1.0.0-rc3.min.injection.removed.js" type="text/javascript"></script>
+<script src="js/form.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="largeWrapper">
+		<div id="largeContentWrap">
+			<div id="mainIndex">
+			
+		<!--*****************************Setting Form*************************-->
+			<form id="setting_form">
+				<h2 class="headerImg" style="margin-bottom: 15px;">Interactive Irrigation Tool</h2>
+				<fieldset>
+					<div class="mainContactForm welcome">
+						Welcome to the Interactive Irrigation Tool! Please take a moment to complete the form below, submitting information about your irrigation system and lawn.  If you need more details about an input parameter, hover your mouse over the question mark beside that parameter name.  You can use default values for some parameters if you are not sure what to select. When you are finished, hit 'submit' at the bottom of the page. 
+						If you have question about this tool, please contact Dr. Kati Migliaccio at <a href="mailto:klwhite@ufl.edu" target="_blank">klwhite@ufl.edu</a>.
+					</div>
+
+
+					
+				</fieldset>
+				<span class="required">* indicates required field</span>
+
+				<!-----------------------------Unit Section---------------------------------------->
+				<fieldset>
+					<table class="mainContactForm">
+						<tr>
+							<td colspan='2'><h4>Units</h4>
+							</td>
+						</tr>
+						<tr>
+							<td class="labelTxt">Select Unit System*:</td>
+							<td class="labelTxt noColor"><input id="metric_unit" type="radio" name="units" value="0" onclick="unitRadioBtnOnChecked(0);" class="chkBox"/>Metric
+								<input id="us_unit" type="radio" name="units" value="1" onclick="unitRadioBtnOnChecked(1);" class="chkBox"/>English</td>
+						</tr>
+
+					</table>
+				</fieldset>
+
+				<!-----------------------------Soil Characteristics Section---------------------------------------->
+				<fieldset>
+					<table class="mainContactForm">
+						<tr>
+							<td colspan='2'><h4>Soil Characteristics</h4>
+							</td>
+						</tr>
+						<tr>
+							<td class="help_blub labelTxt" id="root_depth_label">Rooting Depth*:<span class="question">?</span></td>
+							<td>
+								<input id="root_depth" name="root_depth" type="text" size="20" maxlength="20"></input>
+								<span id="root_depth_unit" class="data_unit" class="txtInput"></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="help_blub labelTxt" id="soil_type_label">Soil Type*:<span class="question">?</span></td>
+							<td><select id="soil_type" name="soil_type">
+									<option value="0">Sand</option>
+									<option value="1">Sandy loam</option>
+									<option value="2">Loam</option>
+									<option value="3">Silt loam</option>
+									<option value="4">Clay loam</option>
+									<option value="5">Clay</option>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="help_blub labelTxt" id="irrigated_area_label">Irrigated Area*:<span class="question">?</span></td>
+							<td>
+								<input id="lot_size" name="lot_size" type="text" size="20" maxlength="20"></input>
+								<span id="lot_size_unit" class="data_unit"></span>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+
+
+				<!-----------------------------Irrigation Technology Used Section---------------------------------------->
+				<fieldset>
+					<table class="mainContactForm">
+						<tr>
+							<td colspan='2'><h4>Irrigation Technology Used</h4>
+							</td>
+						</tr>
+						<tr>
+							<td class="help_blub labelTxt" id="irr_tech_label">Irrigation System Information*:<span class="question">?</span></td>
+							<td><select id="irr_tech" name="irr_tech"
+								onchange="IrrTechOnChange()">
+									<option value="">Choose one</option>
+									<option value="1">Time Based Scheduler</option>
+									<option value="2">Time Based Plus Rain Sensor</option>
+									<option value="3">Time Based Plus Soil Moisture Sensor</option>
+									<option value="4">ET Controller</option>
+							</select></td>
+						</tr>
+						<tr id="threshold_block">
+							<td class="labelTxt">Threshold*:</td>
+							<td><input id="threshold" name="threshold" type="text"
+								size="20" maxlength="20"></input>
+							</td>
+						</tr>
+						<tr id="rain_sensor_setting_block">
+							<td class="labelTxt">Rain Sensor Setting*:</td>
+							<td><input id="rain_sensor_setting"
+								name="rain_sensor_setting" type="text" size="20" maxlength="20" /><span
+								id="rain_sensor_setting_unit" class="data_unit"></span></td>
+						</tr>
+					</table>
+				</fieldset>
+
+				<!-----------------------------Irrigation Schedule Section---------------------------------------->
+				<fieldset>
+					<table border="0" cellpadding="0" cellspacing="0"
+						class="mainContactForm">
+						<tr>
+							<td colspan='2'><h4>Irrigation Schedule</h4></td>
+						</tr>
+						<tr>
+							<td class="labelTxt">Zip Code*:</td>
+							<td><input id="zip_code" name="zip_code" type="text"
+								value="" size="20" maxlength="20" onchange="zipCodeOnChange();"></input>
+								<span id="zip_code_error" style="color: red"></span> <!--this field is updated by form.js. Possible value could be 0(not in miami), 1(in miami), 9999(invalid zip)-->
+								<input id="in_miami" name="in_miami" type="hidden" /></td>
+						</tr>
+						<tr id="street_number_block">
+							<td class="labelTxt">Street Number*:</td>
+							<td><input id="street_number" name="street_number"
+								type="text" size="20" maxlength="20"
+								onchange="streetNumOnChange();"></input>
+							</td>
+						</tr>
+						<tr id="irrigation_dates_miami">
+							<td class="help_blub labelTxt" id="miami_dade_label">Irrigation days*:<span class="question">?</span></td>
+							<td id="irrigation_dates_miami_days" class="labelTxt">Wed & Sat or Sun &
+								Thurs</td>
+						</tr>
+
+						<tr id="irrigation_dates_others">
+							<td class="help_blub labelTxt" id="irr_dates_label">Irrigation
+								days*:<span class="question">?</span></td>
+							<td class="labelTxt noColor">
+								<input id="irr_dates" type="checkbox" name="irr_dates" value="0"></input>Sunday
+								<input type="checkbox" name="irr_dates" value="1" class="chkBox"></input>Monday
+								<input type="checkbox" name="irr_dates" value="2" class="chkBox"></input>Tuesday
+								<input type="checkbox" name="irr_dates" value="3" class="chkBox"></input>Wednesday
+								<input type="checkbox" name="irr_dates" value="4" class="chkBox"></input>Thursday
+								<input type="checkbox" name="irr_dates" value="5" class="chkBox"></input>Friday
+								<input type="checkbox" name="irr_dates" value="6" class="chkBox"></input>Saturday</td>
+						</tr>
+
+
+					</table>
+				</fieldset>
+				<!-----------------------------Irrigation Amount Section---------------------------------------->
+				<fieldset>
+					<table id="irrigation_depth_entry" border="0" cellpadding="0"
+						cellspacing="0" class="mainContactForm">
+						<tr>
+							<td colspan='2'><h4>Irrigation Amount Applied Per Event</h4>
+							</td>
+						</tr>
+						<tr>
+							<td colspan='2' class="labelTxt"><strong>Enter Irrigation Amount OR Select Irrigation System Type*:</strong></td>
+						</tr>
+						<tr>
+							<td  class="labelTxt"><input id="enter_irrgation_depth"
+								type="radio" name="irrigation_depth_method" value="0"
+								onclick="irrDepthMethodRadioBtnOnChecked(0)" /></td>
+							<td class="labelTxt bigger">Enter Irrigation Depth/Amount
+								<br />
+								<div id="irrigation_amount_entry" class="labelTxt bigger">
+									Irrigation Amount*: <input id="irrigation_amount"
+										name="irrigation_amount" type="text" size="20" maxlength="20"></input><span
+										id="irrigation_amount_unit" class="data_unit"></span>
+
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan='2' class="labelTxt"><strong></strong></td>
+						</tr>
+						<tr>
+							<td><input class="labelTxt" id="enter_irrigation_system_info"
+								type="radio" name="irrigation_depth_method" value="1"
+								onclick="irrDepthMethodRadioBtnOnChecked(1)"/>
+							</td>
+							<td class="labelTxt">Select Irrigation System Type</td>
+						</tr>
+						<tr id="irrigation_minutes_entry">
+							<td></td>
+							<td class="labelTxt">Minutes*:<input id="irrigation_minutes"
+								name="irrigation_minutes" type="text" size="20"></input></td>
+						</tr>
+						<tr id="irrigation_system_type_entry">
+							<td class="labelTxt"><strong>Irrigation Type*:</td>
+							<td class="labelTxt"></strong>
+								<div class="labelTxt" id="Sprinkler_Type_Wrap">
+									<div class="divFloatLeft">
+										<input id="irrigation_system" type="radio" name="irrigation_system" value="0" class="chkBox"/> Micro Irrigation Head
+										<img src="images/micro.jpg" alt="micro" id="microHead_button" title="Micro Irrigation" />
+									</div>
+									<div class="divFloatLeft">
+										<input type="radio" name="irrigation_system" value="1" class="chkBox"/>Fixed Irrigation Head
+										<img src="images/fixed.jpg" alt="fixed" id="fixedHead_button" title="fixed" />
+									</div>
+									<div class="divFloatLeft">
+										<input type="radio" name="irrigation_system" value="2" class="chkBox"/>Gear Driven Irrigation Head
+										<img src="images/gear.jpg" alt="gear" id="fixedRotary_button" title="gear" />
+									</div>
+									<div>
+										<input type="radio" name="irrigation_system" value="3" class="chkBox"/>Impact Irrigation Head
+										<img src="images/impact.jpg" alt="impact" id="rotaryHead_button" title="impact.jpg" />
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+
+				</fieldset> 
+				<!-- Remove Comment Mark to Test Calculation
+				<fieldset>
+					<table border="0" cellpadding="0" cellspacing="0"
+						class="mainContactForm">
+						<tr>
+							<td colspan='2'><h4>ET & Rainfall</h4></td>
+						</tr>
+						<tr id="et_block">
+							<td class="labelTxt">ET:</td>
+							<td><input id="et" name="et" type="text"
+								value="0.30;0.38;0.46;0.48;0.51;0.53;0.48" size="40"
+								maxlength="40"></input>cm</td>
+						</tr>
+						<tr class="labelTxt" id="rainfall_block">
+							<td class="labelTxt">Rain:</td>
+							<td><input id="rainfall" name="rainfall" type="text"
+								value="0.28;0.58;0;0;0;0;0" size="40" maxlength="40"></input> cm
+							</td>
+						</tr>
+
+					</table>
+				</fieldset>-->
+				<fieldset>
+					<table class="mainContactForm">
+						<tr>
+							<td colspan='2'><h4>Subscription</h4>
+							</td>
+						</tr>
+						<tr class="labelTxt">
+							<td class="labelTxt">Would you like to receive a weekly evaluation by email?*:</td>
+							<td class="labelTxt noColor"><input id="active_account" type="radio" name="active"
+								value="Y" class="chkBox"/>Yes <input
+								id="deactive_account" type="radio" name="active" value="N" class="chkBox"
+								/>No</td>
+						</tr>
+
+					</table>
+				</fieldset>
+				<input id="submit_form" name="submit_form" type="submit"
+					value="Submit" onclick="validateForm()"></input>
+			</form>
+			<!----------------------------------End of Setting Form---------------------------------------------->
+			
+			<!----Loading------------------ -->
+			<div id="loading">Loading...</div>
+			
+			<!------After Submission---------------- -->
+			<div id="after_submission"></div>
+		</div>
+	</div>
+	</div>
+	<script type="text/javascript">
+init();
+</script>
+</body>
+</html>

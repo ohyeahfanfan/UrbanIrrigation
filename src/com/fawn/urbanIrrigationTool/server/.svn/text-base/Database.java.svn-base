@@ -1,0 +1,203 @@
+package com.fawn.urbanIrrigationTool.server;
+
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.Enumeration;
+
+import javax.servlet.ServletException;
+
+import org.mortbay.util.ajax.JSON;
+
+import net.sf.jsr107cache.Cache;
+import net.sf.jsr107cache.CacheException;
+import net.sf.jsr107cache.CacheManager;
+
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Text;
+
+
+public class Database {
+	private Cache cache;
+	private String dbName;
+	private static final Logger logger = Logger.getLogger(Database.class.getCanonicalName());
+	public Database(String dbName){
+		this.dbName = dbName;
+	}
+	public void replace(String userID, String colName, String colValue) throws ServletException{
+		//this.init("");
+		logger.log(Level.INFO, "Putting user " + userID
+				+ "'s setting information to Datastore");
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+        Key clientKey = KeyFactory.createKey(dbName, userID);
+		Entity entity = new Entity(clientKey);
+		Text textValue = new Text(colValue);
+		entity.setProperty(colName, textValue);
+		Key key = datastore.put(entity);
+		logger.log(Level.INFO, "Putting user " + userID
+				+ "'s setting information to Cache key"+ key);
+		cache = createCache();
+		cache.put(KeyFactory.keyToString(clientKey), entity);
+	}
+	
+	public Hashtable<String,Hashtable<String,String>> fetchAll(){
+		//this.init("");
+		Hashtable<String, Hashtable<String,String>> records = new Hashtable<String, Hashtable<String,String>>();
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		logger.log(Level.INFO, "Retrieving all the users' setting information from Datastore");
+		// The Query interface assembles a query
+		Query q = new Query(this.dbName);
+		PreparedQuery pq = datastore.prepare(q);
+		for (Entity result : pq.asIterable()) {
+		  Text text = (Text)result.getProperty("info");
+		  String info = text.getValue();
+		  String email = (String) result.getKey().getName();
+		  Hashtable<String,String> recordArr = this.processStr2Arr(info);
+		  records.put(email, recordArr);
+		}
+		if(records.isEmpty()){
+			return null;
+		}
+		return records;
+	}
+
+	public String fetch(String key, String colName) throws ServletException {
+		//this.init("");
+		logger.log(Level.INFO, "Retrieving user " + key
+				+ "'s setting information from Cache");
+		cache = createCache();
+		Key clientKey = KeyFactory.createKey(this.dbName, key);
+		Entity entity = (Entity) cache.get(KeyFactory.keyToString(clientKey));
+		String info = "";
+		//entity = null;//test
+		if (entity == null) {
+			try {
+				logger.log(Level.INFO,
+						"Can not find in Cache, so retrieving user " + key
+								+ "'s setting information from Datastore");
+				DatastoreService datastore = DatastoreServiceFactory
+						.getDatastoreService();
+				Entity result = datastore.get(clientKey);
+
+				Text text = (Text)result.getProperty(colName);
+				info = text.getValue();
+			} catch (Exception e) {
+				info = null;
+				logger.log(Level.WARNING, e.getMessage());
+			}
+
+		}else{
+			Text text = (Text)entity.getProperty(colName);
+			info = text.getValue();
+		}
+
+		return info;
+	}
+	
+	public Hashtable<String,String> fetchHash(String key, String colname)throws 
+	ServletException{
+		String result = this.fetch(key, colname);
+		if(result==null){
+			return null;
+		}
+		Hashtable<String,String> recordArr = this.processStr2Arr(result);
+		return recordArr;
+	}
+	
+	public Hashtable<String,String> processStr2Arr(String record){
+		Hashtable<String,String> recordArr =  new Hashtable<String,String>();
+		String[] pairs = record.split(",");
+		for(String pair: pairs){
+			String[] keyVal = pair.split("=");
+			if(keyVal.length == 2){
+				String key = keyVal[0];
+				String val = keyVal[1];
+				recordArr.put(key, val);
+			}
+		}
+		
+		return recordArr;
+	}
+	
+	
+	private Cache createCache() throws ServletException {
+		Map<String, Object> props = Collections.emptyMap();
+		try {
+			return CacheManager.getInstance().getCacheFactory()
+					.createCache(props);
+		} catch (CacheException ex) {
+			logger.log(Level.WARNING, ex.getMessage());
+			throw new ServletException("Could not initialize cache:", ex);
+		}
+	}
+	
+	public void cleanUpCacheDB(String key) throws CacheException{
+		Map<String, Object> props = Collections.emptyMap();
+		cache = CacheManager.getInstance().getCacheFactory().createCache(props);
+		Key clientKey = KeyFactory.createKey(dbName, key);
+		Entity entity = (Entity) cache.get(KeyFactory.keyToString(clientKey));
+		if(entity != null){
+			Text text = (Text)entity.getProperty("info");
+			String info = text.getValue();
+			logger.info(info);
+			logger.info("Removing cache of "+key);
+			cache.remove(KeyFactory.keyToString(clientKey));
+			
+		}
+		entity = (Entity) cache.get(KeyFactory.keyToString(clientKey));
+		if(entity!=null){
+			logger.info("Cache of "+key+" can not be removed");
+		}else{
+			logger.info("Cache of "+key+" is removed");
+		}
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		datastore.delete(clientKey);
+		logger.info("data of "+key+" is removed");
+
+
+	}
+
+	
+//	public void init(String kind){
+//		this.dbName = "UrbanIrrigationTest";
+//	}
+	
+	public static void main(String[] args) throws ServletException {
+//		Database db = new Database("Users");
+//		Hashtable<String, Hashtable<String,String>> ht = db.fetchAll();
+//		if(ht!=null){
+//			Enumeration<String> e = ht.keys(); 
+//	        while (e.hasMoreElements ()) { 
+//	            String email = (String) e.nextElement (); 
+//	            Hashtable<String,String> info =  ht.get (email); 
+//	            Enumeration<String> keys = info.keys();
+//	            System.out.println(email);
+//	            while(keys.hasMoreElements()){
+//	            	String key = (String)keys.nextElement();
+//	            	String val = info.get(key);
+//	            	System.out.print(key+"="+val+",");
+//	            }
+//	            System.out.println("");
+//	        } 
+//		}
+		Database db  = new Database("Users");
+		try {
+			db.cleanUpCacheDB("Ohyeahfanfan@gmail.com");
+		} catch (CacheException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}

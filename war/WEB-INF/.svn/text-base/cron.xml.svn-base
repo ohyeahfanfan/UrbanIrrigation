@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/urbanirrigationapp/wakeup</url>
+    <description>keep instance alive by call servlet every 2 minutes</description>
+    <schedule>every 2 minutes</schedule>
+  </cron>
+  <cron>
+    <url>/urbanirrigationapp/allsend</url>
+    <description>Test Send Weekly Report Every Sunday</description>
+    <schedule>every sunday 09:00</schedule>
+  </cron>
+</cronentries>

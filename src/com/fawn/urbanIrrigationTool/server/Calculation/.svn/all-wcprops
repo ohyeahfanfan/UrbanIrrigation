@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/3/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Calculation
+END
+RainSensor.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/10/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Calculation/RainSensor.java
+END
+ETController.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/10/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Calculation/ETController.java
+END
+TimeBased.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/10/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Calculation/TimeBased.java
+END
+Hydrology.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/21/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Calculation/Hydrology.java
+END
+HydrologyFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/3/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Calculation/HydrologyFactory.java
+END
+SoilWaterSensor.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/10/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Calculation/SoilWaterSensor.java
+END

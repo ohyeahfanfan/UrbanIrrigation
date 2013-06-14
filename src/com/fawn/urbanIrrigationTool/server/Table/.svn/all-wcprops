@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/3/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Table
+END
+Rank.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/10/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Table/Rank.java
+END
+CropCoefficientTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/21/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Table/CropCoefficientTable.java
+END
+CurveNumberTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/19/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Table/CurveNumberTable.java
+END
+SoilTypeTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/10/trunk/UrbanIrrigation/src/com/fawn/urbanIrrigationTool/server/Table/SoilTypeTable.java
+END

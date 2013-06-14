@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/3/trunk/UrbanIrrigation/war/WEB-INF
+END
+logging.properties
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/9/trunk/UrbanIrrigation/war/WEB-INF/logging.properties
+END
+appengine-web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/9/trunk/UrbanIrrigation/war/WEB-INF/appengine-web.xml
+END
+cron.xml
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/14/trunk/UrbanIrrigation/war/WEB-INF/cron.xml
+END
+web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/9/trunk/UrbanIrrigation/war/WEB-INF/web.xml
+END
